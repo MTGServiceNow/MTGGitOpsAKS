@@ -1,0 +1,64 @@
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: traefik
+  namespace: traefik
+spec:
+  interval: 5m
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    remediation:
+      retries: 3
+  chart:
+    spec:
+      chart: traefik
+      version: "33.0.0"            # pick a version matching your cluster
+      sourceRef:
+        kind: HelmRepository
+        name: traefik             # defined in infrastructure/sources/traefik.yaml
+        namespace: flux-system
+  values:
+    # Create an IngressClass named "traefik" and use it by default
+    ingressClass:
+      enabled: true
+      isDefaultClass: false
+      name: traefik
+
+    # Enable Kubernetes Ingress provider (so your existing Ingress resources work)
+    providers:
+      kubernetesIngress:
+        enabled: true
+        publishedService:
+          enabled: true
+
+    # Expose Traefik via LoadBalancer (AKS) – adjust annotations as needed
+    service:
+      enabled: true
+      type: LoadBalancer
+      annotations:
+        service.beta.kubernetes.io/azure-load-balancer-internal: "true"  # or remove if you want public LB[web:24]
+      spec:
+        externalTrafficPolicy: Cluster
+      ports:
+        web:
+          port: 80
+        websecure:
+          port: 443
+
+    # Basic entrypoints
+    ports:
+      web:
+        port: 80
+        expose: true
+        protocol: TCP
+      websecure:
+        port: 443
+        expose: true
+        protocol: TCP
+
+    # Optional: enable dashboard internally only
+    ingressRoute:
+      dashboard:
+        enabled: true
