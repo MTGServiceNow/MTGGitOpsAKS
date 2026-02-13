@@ -50,14 +50,16 @@ spec:
 
     # Basic entrypoints
     ports:
-      web:
-        port: 80
-        expose: {}
-        protocol: TCP
-      websecure:
-        port: 443
-        expose: {}
-        protocol: TCP
+    web:
+      port: 80
+      expose:
+        enabled: true
+      protocol: TCP
+    websecure:
+      port: 443
+      expose:
+        enabled: true
+      protocol: TCP
 
     # Optional: enable dashboard internally only
     ingressRoute:
