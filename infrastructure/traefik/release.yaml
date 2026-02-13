@@ -19,7 +19,7 @@ spec:
       sourceRef:
         kind: HelmRepository
         name: traefik             # defined in infrastructure/sources/traefik.yaml
-        namespace: flux-system
+        namespace: cluster-config
   values:
     # Create an IngressClass named "traefik" and use it by default
     ingressClass:
