@@ -52,11 +52,11 @@ spec:
     ports:
       web:
         port: 80
-        expose: true
+        expose: {}
         protocol: TCP
       websecure:
         port: 443
-        expose: true
+        expose: {}
         protocol: TCP
 
     # Optional: enable dashboard internally only
